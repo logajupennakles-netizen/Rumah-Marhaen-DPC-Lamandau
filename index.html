@@ -1,0 +1,2177 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GMNI - DPC Lamandau</title>
+
+    <!-- ============================== -->
+    <!--          FONT EXTERNAL         -->
+    <!-- ============================== -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ============================================
+           1. VARIABEL GLOBAL (CSS CUSTOM PROPERTIES)
+           - Semua warna, ukuran, dan efek diatur di sini
+           - Mudah diganti tanpa ubah seluruh kode
+           ============================================ */
+        :root {
+            /* -- Warna Merah (sesuai logo GMNI) -- */
+            --red:          #CC0000;
+            --red-dark:     #990000;
+            --red-deep:     #660000;
+            --red-light:    #FF1A1A;
+            --red-glow:     rgba(204, 0, 0, 0.3);
+            --red-soft:     rgba(204, 0, 0, 0.08);
+            --red-muted:    rgba(13, 122, 90, 0.15);
+
+            /* -- Warna Netral -- */
+            --white:        #FFFFFF;
+            --gray-100:     #D4D4D4;
+            --gray-200:     #A3A3A3;
+            --gray-300:     #737373;
+            --gray-400:     #525252;
+            --gray-500:     #404040;
+            --gray-600:     #2D2D2D;
+            --gray-700:     #1F1F1F;
+            --gray-800:     #171717;
+            --gray-900:     #0F0F0F;
+            --black:        #0A0A0A;
+
+            /* -- Tipografi -- */
+            --font:         'Plus Jakarta Sans', sans-serif;
+
+            /* -- Efek & Ukuran -- */
+            --radius:       4px;
+            --transition:   all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        /* ============================================
+           2. RESET & BASE
+           - Menghapus default browser style
+           - Set style dasar untuk seluruh halaman
+           ============================================ */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        ::selection {
+            background: var(--red);
+            color: var(--white);
+        }
+
+        body {
+            font-family: var(--font);
+            background: var(--black);
+            color: var(--white);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        a   { text-decoration: none; color: inherit; }
+        img { display: block; max-width: 100%; }
+        ul  { list-style: none; }
+
+        /* ============================================
+           3. BACKGROUND DEKORASI
+           - Efek cahaya merah di pojok halaman
+           - Fixed agar tetap terlihat saat scroll
+           ============================================ */
+        .bg-deco {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .bg-deco span {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            background: var(--red);
+        }
+
+        .bg-deco .bg-1 { width: 500px; height: 500px; opacity: 0.06; top: -150px; right: -150px; }
+        .bg-deco .bg-2 { width: 400px; height: 400px; opacity: 0.04; bottom: -100px; left: -100px; }
+        .bg-deco .bg-3 { width: 300px; height: 300px; opacity: 0.03; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+
+        /* ============================================
+           4. NAVIGASI
+           ============================================ */
+        /* 4a. Container */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 20px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: var(--transition);
+        }
+
+        /* 4b. Efek scroll (blur background) */
+        .navbar.scrolled {
+            background: rgba(10, 10, 10, 0.92);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(204, 0, 0, 0.1);
+            padding: 14px 40px;
+        }
+
+        /* 4c. Logo */
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-logo img {
+            width: 44px;
+            height: 44px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 8px rgba(204, 0, 0, 0.3));
+        }
+
+        .nav-logo-text { display: flex; flex-direction: column; }
+
+        .nav-logo-text .name {
+            font-weight: 800;
+            font-size: 15px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .nav-logo-text .sub {
+            font-size: 9px;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--red);
+            font-weight: 500;
+        }
+
+        /* 4d. Link Menu (Desktop) */
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+
+        .nav-links a {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--gray-200);
+            position: relative;
+            transition: var(--transition);
+        }
+
+        /* Garis bawah animasi */
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--red);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover { color: var(--red); }
+        .nav-links a:hover::after { width: 100%; }
+        .nav-links a.active { color: var(--red); }
+        .nav-links a.active::after { width: 100%; }
+
+        /* 4e. Tombol CTA di Navbar */
+        .nav-cta {
+            background: var(--red) !important;
+            color: var(--white) !important;
+            padding: 10px 24px;
+            border-radius: var(--radius);
+            font-size: 11px !important;
+            font-weight: 700 !important;
+            letter-spacing: 2px !important;
+        }
+
+        .nav-cta::after { display: none !important; }
+
+        .nav-cta:hover {
+            background: var(--red-dark) !important;
+            transform: translateY(-1px);
+            box-shadow: 0 8px 25px var(--red-glow);
+        }
+
+        /* 4f. Tombol Hamburger (Mobile) */
+        .nav-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--white);
+            cursor: pointer;
+        }
+
+        /* 4g. Menu Mobile (Fullscreen) */
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 999;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 28px;
+        }
+
+        .mobile-menu.active { display: flex; }
+
+        .mobile-menu a {
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--gray-200);
+            transition: var(--transition);
+        }
+
+        .mobile-menu a:hover { color: var(--red); }
+
+        .mobile-close {
+            position: absolute;
+            top: 24px;
+            right: 32px;
+            background: none;
+            border: none;
+            color: var(--white);
+            cursor: pointer;
+        }
+
+        /* ============================================
+           5. HERO SECTION
+           ============================================ */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 120px 40px 80px;
+            overflow: hidden;
+        }
+
+        /* Gradient merah gelap di background */
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--black) 0%, var(--red-deep) 30%, var(--black) 60%, var(--red-deep) 100%);
+            opacity: 0.5;
+        }
+
+        /* Gradient hitam di atas (supaya navbar tidak terganggu) */
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 200px;
+            background: linear-gradient(to bottom, var(--black), transparent);
+            z-index: 1;
+        }
+
+        .hero-inner {
+            position: relative;
+            z-index: 2;
+            max-width: 1280px;
+            margin: 0 auto;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        /* Badge "Sejak 23 Maret 1954" */
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--red-muted);
+            border: 1px solid rgba(204, 0, 0, 0.2);
+            padding: 8px 16px;
+            border-radius: var(--radius);
+            margin-bottom: 28px;
+        }
+
+        .hero-badge .dot {
+            width: 8px; height: 8px;
+            background: var(--red);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .hero-badge span {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--red);
+        }
+
+        /* Judul Hero */
+        .hero h1 {
+            font-size: clamp(42px, 6vw, 80px);
+            font-weight: 700;
+            line-height: 0.95;
+            letter-spacing: -1px;
+            margin-bottom: 24px;
+        }
+
+        .hero h1 .red {
+            background: linear-gradient(135deg, var(--red-light), var(--red), var(--red-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Deskripsi Hero */
+        .hero-desc {
+            font-size: 17px;
+            font-weight: 300;
+            line-height: 1.8;
+            color: var(--gray-200);
+            max-width: 480px;
+            margin-bottom: 36px;
+        }
+
+        /* Tombol Hero */
+        .hero-buttons { display: flex; gap: 16px; flex-wrap: wrap; }
+
+        /* ============================================
+           6. KOMPONEN TOMBOL (REUSABLE)
+           - Digunakan di beberapa section
+           ============================================ */
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--red);
+            color: var(--white);
+            padding: 16px 36px;
+            border-radius: var(--radius);
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            border: none;
+            cursor: pointer;
+            font-family: var(--font);
+            transition: var(--transition);
+        }
+
+        .btn-primary:hover {
+            background: var(--red-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px var(--red-glow);
+        }
+
+        .btn-outline {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: transparent;
+            color: var(--white);
+            padding: 16px 36px;
+            border-radius: var(--radius);
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            cursor: pointer;
+            font-family: var(--font);
+            transition: var(--transition);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--white);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .link-arrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--red);
+            transition: var(--transition);
+        }
+
+        .link-arrow:hover { gap: 16px; }
+
+        .link-arrow svg { width: 16px; height: 16px; }
+
+        /* ============================================
+           7. HERO IMAGE (Kolom Kanan)
+           ============================================ */
+        .hero-image {
+            position: relative;
+            animation: fadeInUp 1s 0.3s ease forwards;
+            opacity: 0;
+        }
+
+        .hero-img-wrap {
+            position: relative;
+            height: 65vh;
+            overflow: hidden;
+            border-radius: var(--radius);
+            border: 1px solid rgba(204, 0, 0, 0.15);
+        }
+
+        .hero-img-wrap img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            filter: grayscale(60%) opacity(0.6);
+            transition: var(--transition);
+        }
+
+        .hero-img-wrap:hover img {
+            filter: grayscale(0%) opacity(0.9);
+            transform: scale(1.05);
+        }
+
+        .hero-img-wrap .overlay {
+            position: absolute; inset: 0;
+            background: linear-gradient(to top, rgba(10, 10, 10, 0.9), transparent 50%);
+        }
+
+        .hero-img-wrap .label {
+            position: absolute;
+            bottom: 24px; left: 24px;
+        }
+
+        .hero-img-wrap .label span {
+            font-size: 10px; font-weight: 700;
+            letter-spacing: 2px; text-transform: uppercase;
+            color: var(--red);
+        }
+
+        .hero-img-wrap .label p {
+            font-size: 13px; color: var(--gray-200); margin-top: 4px;
+        }
+
+        /* Logo melayang di sudut */
+        .hero-logo-float {
+            position: absolute;
+            bottom: -30px; right: -30px;
+            width: 120px; height: 120px;
+            background: var(--black);
+            border: 2px solid rgba(204, 0, 0, 0.3);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            padding: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            z-index: 5;
+        }
+
+        .hero-logo-float img { width: 100%; height: 100%; object-fit: contain; }
+
+        /* Dekorasi sudut */
+        .corner { position: absolute; width: 60px; height: 60px; }
+        .corner-tl { top: -12px; right: -12px; border-top: 3px solid rgba(204, 0, 0, 0.25); border-right: 3px solid rgba(204, 0, 0, 0.25); }
+        .corner-br { bottom: -12px; left: -12px; border-bottom: 3px solid rgba(204, 0, 0, 0.25); border-left: 3px solid rgba(204, 0, 0, 0.25); }
+
+        /* ============================================
+           8. MARQUEE (Running Text)
+           ============================================ */
+        .marquee {
+            background: var(--red);
+            padding: 14px 0;
+            overflow: hidden;
+            position: relative;
+            z-index: 10;
+        }
+
+        .marquee-track {
+            display: flex;
+            animation: marqueeScroll 35s linear infinite;
+            white-space: nowrap;
+        }
+
+        .marquee-track span {
+            font-size: 12px; font-weight: 700;
+            letter-spacing: 3px; text-transform: uppercase;
+            color: var(--white); padding: 0 24px; opacity: 0.9;
+        }
+
+        .marquee-track .sep { color: rgba(255, 255, 255, 0.3); padding: 0 8px; }
+
+        /* ============================================
+           9. STATISTIK (Angka-Angka)
+           ============================================ */
+        .stats {
+            background: var(--gray-800);
+            border-top: 1px solid rgba(204, 0, 0, 0.08);
+            border-bottom: 1px solid rgba(204, 0, 0, 0.08);
+            position: relative;
+            z-index: 10;
+        }
+
+        .stats-inner {
+            max-width: 1280px; margin: 0 auto; padding: 60px 40px;
+            display: grid; grid-template-columns: repeat(4, 1fr);
+            gap: 32px; text-align: center;
+        }
+
+        .stat-num {
+            font-size: clamp(32px, 4vw, 52px);
+            font-weight: 700; letter-spacing: -1px;
+        }
+
+        .stat-num.red { color: var(--red); }
+
+        .stat-label {
+            font-size: 10px; font-weight: 700;
+            letter-spacing: 2.5px; text-transform: uppercase;
+            color: var(--gray-300); margin-top: 8px;
+        }
+
+        /* ============================================
+           10. LAYOUT SECTION (Reusable)
+           - Setiap section utama pakai class ini
+           ============================================ */
+        .section {
+            position: relative;
+            z-index: 10;
+            padding: 100px 40px;
+        }
+
+        .section--alt { background: var(--gray-800); }
+
+        .section__inner {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        /* Header Section (Judul + Deskripsi) */
+        .section__head { margin-bottom: 64px; }
+        .section__head--center { text-align: center; }
+
+        .section__head .tag {
+            font-size: 11px; font-weight: 700;
+            letter-spacing: 2.5px; text-transform: uppercase;
+            color: var(--red); display: block; margin-bottom: 12px;
+        }
+
+        .section__head h2 {
+            font-size: clamp(32px, 4.5vw, 56px);
+            font-weight: 700; letter-spacing: -1px; line-height: 1.1;
+        }
+
+        .section__head h2 .dim { color: var(--gray-400); }
+
+        .section__head .desc {
+            font-size: 16px; font-weight: 300;
+            color: var(--gray-200); max-width: 480px;
+            margin-top: 16px; line-height: 1.7;
+        }
+
+        .section__head--center .desc { margin-left: auto; margin-right: auto; }
+
+        /* Header dengan baris (judul kiri, deskripsi kanan) */
+        .section__row {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 40px; flex-wrap: wrap;
+            margin-bottom: 64px;
+        }
+
+        .section__row .desc { margin-top: 0; }
+
+        /* ============================================
+           11. KARTU (Reusable)
+           ============================================ */
+        .card {
+            background: var(--gray-700);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: var(--radius);
+            transition: var(--transition);
+        }
+
+        .card:hover { border-color: rgba(204, 0, 0, 0.2); }
+
+        /* Ikon di dalam kartu */
+        .card-icon {
+            width: 52px; height: 52px;
+            background: var(--red-soft);
+            border: 1px solid rgba(204, 0, 0, 0.1);
+            border-radius: var(--radius);
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 24px;
+            transition: var(--transition);
+        }
+
+        .card:hover .card-icon { background: var(--red-muted); }
+        .card-icon svg { width: 24px; height: 24px; color: var(--red); }
+
+        /* Variasi kecil untuk kartu program */
+        .card--sm { padding: 36px; }
+        .card--sm:hover { transform: translateY(-4px); }
+        .card--sm .card-icon { width: 44px; height: 44px; margin-bottom: 20px; }
+        .card--sm .card-icon svg { width: 20px; height: 20px; }
+        .card--sm h3 { font-size: 17px; font-weight: 600; margin-bottom: 10px; }
+        .card--sm p { font-size: 13px; font-weight: 300; line-height: 1.7; color: var(--gray-200); }
+
+        /* Variasi besar untuk kartu visi/misi */
+        .card--lg { padding: 48px; }
+        .card--lg h3 { font-size: 24px; font-weight: 600; margin-bottom: 20px; }
+        .card--lg p { font-size: 15px; font-weight: 300; line-height: 1.8; color: var(--gray-200); }
+        .card--lg p strong { color: var(--white); font-weight: 500; }
+
+        /* ============================================
+           12. PROFIL SECTION
+           ============================================ */
+        .profil-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+
+        .profil-img {
+            position: relative;
+            height: 55vh;
+            overflow: hidden;
+            border-radius: var(--radius);
+        }
+
+        .profil-img img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            filter: grayscale(50%) opacity(0.7);
+            transition: var(--transition);
+        }
+
+        .profil-img:hover img {
+            filter: grayscale(0%) opacity(0.9);
+            transform: scale(1.05);
+        }
+
+        .profil-img .badge {
+            position: absolute; bottom: 24px; left: 24px;
+            background: var(--red); padding: 8px 16px;
+            border-radius: var(--radius);
+            font-size: 10px; font-weight: 700;
+            letter-spacing: 2px; text-transform: uppercase;
+        }
+
+        .profil-text h2 {
+            font-size: clamp(32px, 4vw, 52px);
+            font-weight: 700; letter-spacing: -1px;
+            line-height: 1.1; margin-bottom: 24px;
+        }
+
+        .profil-text h2 .dim { color: var(--gray-400); }
+
+        .profil-text p {
+            font-size: 16px; font-weight: 300;
+            line-height: 1.8; color: var(--gray-200);
+            margin-bottom: 16px;
+        }
+
+        .profil-text p strong { color: var(--white); font-weight: 500; }
+
+        /* ============================================
+           13. MISI LIST
+           ============================================ */
+        .misi-list { display: flex; flex-direction: column; gap: 16px; }
+
+        .misi-list li {
+            display: flex; align-items: flex-start; gap: 14px;
+            font-size: 14px; font-weight: 300;
+            line-height: 1.7; color: var(--gray-200);
+        }
+
+        .misi-num {
+            flex-shrink: 0;
+            width: 26px; height: 26px;
+            background: var(--red-soft);
+            border: 1px solid rgba(204, 0, 0, 0.1);
+            border-radius: var(--radius);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 11px; font-weight: 700; color: var(--red);
+            margin-top: 2px;
+        }
+
+        /* ============================================
+           14. PILAR TRISAKTI (Image Cards)
+           ============================================ */
+        .pillars-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 4px;
+        }
+
+        .pillar {
+            position: relative;
+            height: 55vh;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .pillar img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            filter: grayscale(100%);
+            transition: var(--transition);
+        }
+
+        .pillar:hover img { filter: grayscale(0%); transform: scale(1.1); }
+
+        .pillar .pillar-bg {
+            position: absolute; inset: 0;
+            background: linear-gradient(to top, rgba(10, 10, 10, 0.9) 0%, rgba(10, 10, 10, 0.3) 50%, transparent);
+            transition: var(--transition);
+        }
+
+        .pillar:hover .pillar-bg {
+            background: linear-gradient(to top, rgba(10, 10, 10, 0.95) 0%, rgba(10, 10, 10, 0.5) 50%, rgba(10, 10, 10, 0.1));
+        }
+
+        .pillar .pillar-body {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            padding: 32px;
+        }
+
+        .pillar .pillar-tag {
+            font-size: 10px; font-weight: 700;
+            letter-spacing: 2px; text-transform: uppercase;
+            color: var(--red);
+        }
+
+        .pillar .pillar-title {
+            font-size: 22px; font-weight: 600;
+            margin-top: 8px;
+            transform: translateY(12px);
+            transition: transform 0.5s ease;
+        }
+
+        .pillar:hover .pillar-title { transform: translateY(0); }
+
+        .pillar .pillar-desc {
+            font-size: 13px; font-weight: 300;
+            color: var(--gray-200); line-height: 1.6;
+            margin-top: 8px;
+            opacity: 0;
+            transition: opacity 0.5s ease 0.1s;
+        }
+
+        .pillar:hover .pillar-desc { opacity: 1; }
+
+        /* ============================================
+           15. BERITA CARDS
+           ============================================ */
+        .berita-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .berita-card { cursor: pointer; }
+
+        .berita-card .img {
+            position: relative;
+            height: 38vh;
+            overflow: hidden;
+            border-radius: var(--radius);
+            margin-bottom: 20px;
+        }
+
+        .berita-card .img img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            filter: grayscale(60%) opacity(0.7);
+            transition: var(--transition);
+        }
+
+        .berita-card:hover .img img {
+            filter: grayscale(0%) opacity(0.9);
+            transform: scale(1.08);
+        }
+
+        .berita-card .img .img-overlay {
+            position: absolute; inset: 0;
+            background: linear-gradient(to top, rgba(10, 10, 10, 0.6), transparent);
+        }
+
+        .berita-card .img .cat {
+            position: absolute; top: 16px; left: 16px;
+            background: var(--red); padding: 5px 12px;
+            border-radius: var(--radius);
+            font-size: 9px; font-weight: 700;
+            letter-spacing: 2px; text-transform: uppercase;
+        }
+
+        .berita-meta {
+            display: flex; align-items: center; gap: 12px;
+            font-size: 11px; color: var(--gray-300); margin-bottom: 10px;
+        }
+
+        .berita-meta .dot {
+            width: 4px; height: 4px;
+            background: var(--gray-400); border-radius: 50%;
+        }
+
+        .berita-card h3 {
+            font-size: 17px; font-weight: 600;
+            letter-spacing: -0.3px; line-height: 1.4;
+            margin-bottom: 8px; transition: var(--transition);
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .berita-card:hover h3 { color: var(--red); }
+
+        .berita-card .excerpt {
+            font-size: 13px; font-weight: 300;
+            color: var(--gray-200); line-height: 1.6;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* ============================================
+           16. GALERI (Grid Masonry)
+           ============================================ */
+        .galeri-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-auto-rows: 200px;
+            gap: 4px;
+        }
+
+        .galeri-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: var(--radius);
+            cursor: pointer;
+        }
+
+        .galeri-item.col-2 { grid-column: span 2; }
+        .galeri-item.row-2 { grid-row: span 2; }
+
+        .galeri-item img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            filter: grayscale(80%);
+            transition: var(--transition);
+        }
+
+        .galeri-item:hover img { filter: grayscale(0%); transform: scale(1.06); }
+
+        .galeri-item .gal-bg {
+            position: absolute; inset: 0;
+            background: rgba(0, 0, 0, 0.25);
+            transition: var(--transition);
+        }
+
+        .galeri-item:hover .gal-bg { background: rgba(0, 0, 0, 0.05); }
+
+        /* ============================================
+           17. QUOTE (Kutipan Bung Karno)
+           ============================================ */
+        .quote {
+            position: relative; z-index: 10;
+            padding: 120px 40px;
+        }
+
+        .quote__inner {
+            max-width: 900px; margin: 0 auto; text-align: center;
+        }
+
+        .quote__icon {
+            width: 60px; height: 60px;
+            background: var(--red-soft);
+            border: 1px solid rgba(204, 0, 0, 0.1);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 32px;
+        }
+
+        .quote__icon svg { width: 28px; height: 28px; color: var(--red); }
+
+        .quote__text {
+            font-size: clamp(24px, 3.5vw, 42px);
+            font-weight: 600; letter-spacing: -0.5px; line-height: 1.3;
+        }
+
+        .quote__text .hl { color: var(--red); }
+
+        .quote__author { margin-top: 32px; }
+        .quote__author .name { font-size: 18px; font-weight: 600; }
+        .quote__author .role { font-size: 13px; color: var(--gray-300); margin-top: 4px; font-weight: 300; }
+
+        /* ============================================
+           18. PENGURUS CARDS
+           ============================================ */
+        .pengurus-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .pengurus-card {
+            background: var(--gray-700);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: var(--radius);
+            padding: 36px 24px;
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .pengurus-card:hover { border-color: rgba(204, 0, 0, 0.2); }
+
+        .pengurus-avatar {
+            width: 80px; height: 80px;
+            border-radius: 50%; overflow: hidden;
+            margin: 0 auto 16px;
+            border: 2px solid rgba(204, 0, 0, 0.15);
+        }
+
+        .pengurus-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+        .pengurus-card .jabatan {
+            font-size: 9px; font-weight: 700;
+            letter-spacing: 2px; text-transform: uppercase;
+            color: var(--red);
+        }
+
+        .pengurus-card .nama { font-size: 16px; font-weight: 600; margin-top: 6px; }
+        .pengurus-card .univ { font-size: 11px; color: var(--gray-300); margin-top: 2px; font-weight: 300; }
+
+        /* ============================================
+           19. CTA / FORM BERGABUNG
+           ============================================ */
+        .cta-box {
+            max-width: 1000px; margin: 0 auto;
+            background: linear-gradient(135deg, var(--red-deep), var(--gray-800) 60%);
+            border: 1px solid rgba(204, 0, 0, 0.15);
+            border-radius: var(--radius);
+            padding: 80px 60px;
+            text-align: center;
+            position: relative; overflow: hidden;
+        }
+
+        /* Cahaya dekoratif di CTA */
+        .cta-box::before {
+            content: ''; position: absolute;
+            top: -50%; right: -20%;
+            width: 400px; height: 400px;
+            background: var(--red); border-radius: 50%;
+            filter: blur(120px); opacity: 0.08;
+        }
+
+        .cta-box::after {
+            content: ''; position: absolute;
+            bottom: -30%; left: -10%;
+            width: 300px; height: 300px;
+            background: var(--red); border-radius: 50%;
+            filter: blur(100px); opacity: 0.06;
+        }
+
+        .cta-box > * { position: relative; z-index: 2; }
+
+        .cta-box h2 {
+            font-size: clamp(28px, 4vw, 48px);
+            font-weight: 700; letter-spacing: -1px;
+            line-height: 1.15; margin: 12px 0 16px;
+        }
+
+        .cta-box h2 .red { color: var(--red); }
+
+        .cta-box .desc {
+            font-size: 16px; font-weight: 300;
+            color: var(--gray-200); max-width: 520px;
+            margin: 0 auto 40px; line-height: 1.7;
+        }
+
+        .form-join {
+            max-width: 440px; margin: 0 auto;
+            display: flex; flex-direction: column; gap: 12px;
+        }
+
+        .form-join input,
+        .form-join select {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius);
+            padding: 14px 18px;
+            font-size: 13px; font-family: var(--font);
+            color: var(--white);
+            outline: none;
+            transition: var(--transition);
+            -webkit-appearance: none;
+        }
+
+        .form-join input::placeholder { color: var(--gray-300); }
+        .form-join input:focus,
+        .form-join select:focus { border-color: rgba(204, 0, 0, 0.4); }
+        .form-join select option { background: var(--gray-700); color: var(--white); }
+
+        .form-join .btn-submit {
+            background: var(--red); color: var(--white);
+            border: none; padding: 16px;
+            border-radius: var(--radius);
+            font-size: 12px; font-weight: 700;
+            letter-spacing: 2.5px; text-transform: uppercase;
+            font-family: var(--font); cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .form-join .btn-submit:hover {
+            background: var(--red-dark);
+            box-shadow: 0 8px 30px var(--red-glow);
+            transform: translateY(-2px);
+        }
+
+        .form-msg {
+            font-size: 13px; font-weight: 500;
+            margin-top: 8px; display: none;
+        }
+
+        .form-msg.show { display: block; }
+        .form-msg.ok { color: #22c55e; }
+        .form-msg.err { color: var(--red-light); }
+
+        /* ============================================
+           20. KONTAK SECTION
+           ============================================ */
+        .kontak-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px; align-items: start;
+        }
+
+        .kontak-item {
+            display: flex; align-items: flex-start; gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .kontak-icon {
+            width: 40px; height: 40px;
+            background: var(--red-soft);
+            border: 1px solid rgba(204, 0, 0, 0.1);
+            border-radius: var(--radius);
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .kontak-icon svg { width: 18px; height: 18px; color: var(--red); }
+        .kontak-item .label { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+        .kontak-item .value { font-size: 13px; font-weight: 300; color: var(--gray-200); line-height: 1.6; }
+
+        /* Sosial Media Links */
+        .socials { display: flex; gap: 10px; margin-top: 16px; }
+
+        .socials a {
+            width: 40px; height: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius);
+            display: flex; align-items: center; justify-content: center;
+            transition: var(--transition);
+        }
+
+        .socials a:hover { background: var(--red); border-color: var(--red); }
+        .socials a svg { width: 16px; height: 16px; color: var(--gray-200); transition: var(--transition); }
+        .socials a:hover svg { color: var(--white); }
+
+        /* Map Placeholder */
+        .kontak-map {
+            position: relative; height: 50vh;
+            border-radius: var(--radius); overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .kontak-map img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            filter: grayscale(80%) opacity(0.35);
+        }
+
+        .map-pin {
+            position: absolute; inset: 0;
+            display: flex; align-items: center; justify-content: center;
+            text-align: center;
+        }
+
+        .map-dot {
+            width: 50px; height: 50px;
+            background: var(--red); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 12px;
+            box-shadow: 0 0 0 10px rgba(204, 0, 0, 0.15);
+            animation: pulse 2s infinite;
+        }
+
+        .map-dot svg { width: 22px; height: 22px; color: var(--white); }
+        .map-label { font-size: 13px; font-weight: 600; }
+        .map-addr { font-size: 11px; color: var(--gray-300); margin-top: 2px; font-weight: 300; }
+
+        /* ============================================
+           21. FOOTER
+           ============================================ */
+        .footer {
+            position: relative; z-index: 10;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            background: var(--black);
+        }
+
+        .footer__inner {
+            max-width: 1280px; margin: 0 auto;
+            padding: 64px 40px 32px;
+        }
+
+        .footer__grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr 1fr;
+            gap: 48px; margin-bottom: 48px;
+        }
+
+        .footer__brand {
+            display: flex; align-items: center; gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .footer__brand img { width: 38px; height: 38px; object-fit: contain; }
+        .footer__brand span { font-weight: 800; font-size: 14px; letter-spacing: 3px; text-transform: uppercase; }
+
+        .footer__desc {
+            font-size: 13px; font-weight: 300;
+            color: var(--gray-300); line-height: 1.7;
+        }
+
+        .footer__col h4 {
+            font-size: 10px; font-weight: 700;
+            letter-spacing: 2.5px; text-transform: uppercase;
+            color: var(--gray-400); margin-bottom: 20px;
+        }
+
+        .footer__col ul { display: flex; flex-direction: column; gap: 12px; }
+        .footer__col a { font-size: 13px; font-weight: 300; color: var(--gray-300); transition: var(--transition); }
+        .footer__col a:hover { color: var(--red); }
+
+        .footer__col .value {
+            font-size: 13px; font-weight: 300;
+            color: var(--gray-300); line-height: 1.6; margin-bottom: 10px;
+        }
+
+        .footer__bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 24px;
+            display: flex; justify-content: space-between;
+            align-items: center; flex-wrap: wrap; gap: 12px;
+        }
+
+        .footer__bottom p { font-size: 11px; color: var(--gray-400); font-weight: 300; }
+
+        /* ============================================
+           22. BACK TO TOP BUTTON
+           ============================================ */
+        .back-top {
+            position: fixed; bottom: 24px; right: 24px;
+            z-index: 900; width: 48px; height: 48px;
+            background: var(--red); border: none;
+            border-radius: var(--radius);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            opacity: 0; transform: translateY(16px);
+            pointer-events: none;
+            transition: var(--transition);
+            box-shadow: 0 8px 30px var(--red-glow);
+        }
+
+        .back-top.show {
+            opacity: 1; transform: translateY(0); pointer-events: auto;
+        }
+
+        .back-top:hover { background: var(--red-dark); transform: translateY(-2px); }
+        .back-top svg { width: 20px; height: 20px; color: var(--white); }
+
+        /* ============================================
+           23. ANIMASI KEYFRAMES
+           ============================================ */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes marqueeScroll {
+            0%   { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(204, 0, 0, 0.4); }
+            50%      { box-shadow: 0 0 0 12px rgba(204, 0, 0, 0); }
+        }
+
+        /* Scroll Reveal */
+        .reveal {
+            opacity: 0; transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .reveal.show { opacity: 1; transform: translateY(0); }
+
+        /* ============================================
+           24. RESPONSIVE (Mobile-First Breakpoints)
+           ============================================ */
+
+        /* --- Tablet (≤ 1024px) --- */
+        @media (max-width: 1024px) {
+            .hero-inner       { grid-template-columns: 1fr; gap: 40px; }
+            .hero-image       { display: none; }
+            .profil-grid      { grid-template-columns: 1fr; gap: 40px; }
+            .vm-grid          { grid-template-columns: 1fr; }
+            .pillars-grid     { grid-template-columns: 1fr; }
+            .pillar           { height: 45vh; }
+            .program-grid     { grid-template-columns: repeat(2, 1fr); }
+            .berita-grid      { grid-template-columns: repeat(2, 1fr); }
+            .galeri-grid      { grid-template-columns: repeat(3, 1fr); }
+            .pengurus-grid    { grid-template-columns: repeat(2, 1fr); }
+            .kontak-grid      { grid-template-columns: 1fr; }
+            .footer__grid     { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        /* --- Mobile (≤ 768px) --- */
+        @media (max-width: 768px) {
+            .navbar                 { padding: 16px 20px; }
+            .navbar.scrolled        { padding: 12px 20px; }
+            .nav-links              { display: none; }
+            .nav-toggle             { display: block; }
+            .section                { padding: 64px 20px; }
+            .hero                   { padding: 100px 20px 60px; }
+            .stats-inner            { grid-template-columns: repeat(2, 1fr); padding: 40px 20px; }
+            .program-grid           { grid-template-columns: 1fr; }
+            .berita-grid            { grid-template-columns: 1fr; }
+            .galeri-grid            { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 160px; }
+            .galeri-item.col-2      { grid-column: span 2; }
+            .galeri-item.row-2      { grid-row: span 1; }
+            .pengurus-grid          { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+            .cta-box                { padding: 48px 24px; }
+            .footer__grid           { grid-template-columns: 1fr; gap: 32px; }
+            .footer__inner          { padding: 48px 20px 24px; }
+            .card--lg               { padding: 32px 24px; }
+            .hero-buttons           { flex-direction: column; }
+            .hero-buttons a         { text-align: center; justify-content: center; }
+            .section__row           { flex-direction: column; align-items: flex-start; }
+            .quote                  { padding: 80px 20px; }
+        }
+
+        /* --- Small Mobile (≤ 480px) --- */
+        @media (max-width: 480px) {
+            .galeri-item.col-2 { grid-column: span 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==========================================
+         BACKGROUND DEKORASI
+         - 3 cahaya merah blur sebagai atmosfer
+         ========================================== -->
+    <div class="bg-deco">
+        <span class="bg-1"></span>
+        <span class="bg-2"></span>
+        <span class="bg-3"></span>
+    </div>
+
+    <!-- ==========================================
+         NAVIGASI
+         ========================================== -->
+    <nav class="navbar" id="navbar">
+        <!-- Logo -->
+        <a href="#beranda" class="nav-logo">
+            <img src="logogmni.jpg.jpeg" alt="Logo GMNI">
+            <div class="nav-logo-text">
+                <span class="name">DPC GMNI</span>
+                <span class="sub">LAMANDAU</span>
+            </div>
+        </a>
+
+        <!-- Menu Desktop -->
+        <div class="nav-links">
+            <a href="#beranda">Beranda</a>
+            <a href="#profil">Profil</a>
+            <a href="#visi-misi">Visi Misi</a>
+            <a href="#program">Program</a>
+            <a href="#berita">Berita</a>
+            <a href="#galeri">Galeri</a>
+            <a href="#kontak">Kontak</a>
+            <a href="#bergabung" class="nav-cta">Bergabung</a>
+        </div>
+
+        <!-- Tombol Hamburger (Mobile) -->
+        <button class="nav-toggle" id="navToggle" aria-label="Buka menu">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                <line x1="3" y1="6" x2="21" y2="6"/>
+                <line x1="3" y1="12" x2="21" y2="12"/>
+                <line x1="3" y1="18" x2="21" y2="18"/>
+            </svg>
+        </button>
+    </nav>
+
+    <!-- Menu Mobile (Fullscreen) -->
+    <div class="mobile-menu" id="mobileMenu">
+        <button class="mobile-close" id="mobileClose" aria-label="Tutup menu">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+        </button>
+        <a href="#beranda" class="mob-link">Beranda</a>
+        <a href="#profil" class="mob-link">Profil</a>
+        <a href="#visi-misi" class="mob-link">Visi Misi</a>
+        <a href="#program" class="mob-link">Program</a>
+        <a href="#berita" class="mob-link">Berita</a>
+        <a href="#galeri" class="mob-link">Galeri</a>
+        <a href="#kontak" class="mob-link">Kontak</a>
+        <a href="#bergabung" class="mob-link" style="color:var(--red)">Bergabung</a>
+    </div>
+
+    <!-- ==========================================
+         HERO SECTION
+         ========================================== -->
+    <section class="hero" id="beranda">
+        <div class="hero-inner">
+            <!-- Kolom Kiri: Teks -->
+            <div class="hero-content" style="animation: fadeInUp 1s ease forwards">
+                <div class="hero-badge">
+                    <span class="dot"></span>
+                    <span>10 Mei 2025</span>
+                </div>
+
+                <h1>
+                    Gerakan<br>
+                    <span class="red">Mahasiswa</span>
+                    <br>Nasional<br>
+                    <span class="red">Indonesia</span>
+                    <br>
+                    <br>DPC Lamandau</br>
+                </h1>
+
+                <p class="hero-desc">
+                    GMNI lahir dengan identitasnya yang hakiki sebagai Organisasi Kader dan Organisasi Perjuangan
+yang berlandaskan ajaran Soekarno.<br> Karena itu, dalam aktivitasnya terdapat prinsip-prinsip
+perjuangan yang harus tetap melekat dalam tubuh GMNI dan menjadi dasar perjuangan GMNI,
+yakni, GMNI berjuang untuk rakyat, GMNI berjuang bersama-sama rakyat.
+                </p>
+
+                <div class="hero-buttons">
+                    <a href="#profil" class="btn-primary">
+                        Tentang Kami
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                            <line x1="5" y1="12" x2="19" y2="12"/>
+                            <polyline points="12 5 19 12 12 19"/>
+                        </svg>
+                    </a>
+                    <a href="#program" class="btn-outline">Program Kerja</a>
+                </div>
+            </div>
+
+            <!-- Kolom Kanan: Gambar + Logo -->
+            <div class="hero-image">
+                <div class="hero-img-wrap">
+                    <img src="poto di branda.jpeg".jpegt="GMNI">
+                    <div class="overlay"></div>
+                    <div class="label">
+                        <span>Marhaenisme</span>
+                        <p>Berjuang bersama rakyat kecil</p>
+                    </div>
+                </div>
+                <div class="hero-logo-float">
+                    <img src="logogmni.jpg.jpeg" alt="Logo GMNI">
+                </div>
+                <div class="corner corner-tl"></div>
+                <div class="corner corner-br"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         MARQUEE (Running Text Merah)
+         ========================================== -->
+    <div class="marquee">
+        <div class="marquee-track">
+            <span>Pejuang Pemikir - Pemikir Pejuang</span><span class="sep">✦</span>
+            <span>GmnI Naik Kelas</span><span class="sep">✦</span>
+            <span>Bina diri
+</span><span class="sep">✦</span>
+            <span>Bina ilmu
+</span><span class="sep">✦</span>
+            <span>Bina bangsa</span><span class="sep">✦</span>
+            <span>GmnI Jaya!!!
+</span><span class="sep">✦</span>
+            <span>Marhaen Menang!!!
+</span><span class="sep">✦</span>
+<span>Merdeka!!!
+</span><span class="sep">✦</span>
+            <!-- Duplikat untuk efek seamless loop -->
+            <span>Pejuang Pemikir - Pemikir Pejuang</span><span class="sep">✦</span>
+            <span>GmnI Naik Kelas</span><span class="sep">✦</span>
+            <span>Bina diri
+</span><span class="sep">✦</span>
+            <span>Bina ilmu
+</span><span class="sep">✦</span>
+            <span>Bina bangsa</span><span class="sep">✦</span>
+            <span>GmnI Jaya!!!
+</span><span class="sep">✦</span>
+            <span>Marhaen Menang!!!
+</span><span class="sep">✦</span>
+<span>Merdeka!!!
+</span><span class="sep">✦</span>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         STATISTIK
+         ========================================== -->
+    <div class="stats">
+        <div class="stats-inner reveal">
+            <div>
+                <div class="stat-num">2025</div>
+                <div class="stat-label">Tahun Berdiri</div>
+            </div>
+            <div>
+                <div class="stat-num">27</div>
+                <div class="stat-label">DPC GMNI LAMANDAU</div>
+            </div>
+            <div>
+                <div class="stat-num">18</div>
+                <div class="stat-label">FSM GMNI LAMANDAU</div>
+            </div>
+            <div>
+                <div class="stat-num red">∞</div>
+                <div class="stat-label">Semangat Perjuangan</div>
+            </div>
+            <div>
+            <div class="stat-num">45</div>
+            <div class="stat-label">total</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         PROFIL / SEJARAH
+         ========================================== -->
+    <section class="section" id="profil">
+        <div class="section__inner">
+            <div class="profil-grid reveal">
+                <!-- Gambar -->
+                <div class="profil-img">
+                    <img src="gmnilmd beranda.jpeg"alt="Sejarah GMNI">
+                    <div class="badge">Est. 2026</div>
+                </div>
+
+                <!-- Teks -->
+                <div class="profil-text">
+                    <span class="tag">Tentang Kami</span>
+                    <h2>Sejarah<br><span class="dim">Perjuangan</span></h2>
+                    <p>
+                        Gerakan Mahasiswa Nasional Indonesia (GMNI) Lamandau didirikan pada
+                        <strong>10 Mei 2025</strong> di Nanga Bulik, sebagai wadah
+                        perjuangan mahasiswa yang berlandaskan faham Marhaenisme
+                        yang dicetuskan oleh Ir. Soekarno.
+                    </p>
+                    <p>
+                        GMNI lahir dari semangat kebangsaan untuk memperjuangkan
+                        <strong>kemerdekaan yang utuh dan menyeluruh</strong> bagi
+                        bangsa Indonesia, berdasarkan Trisakti: berdaulat di bidang
+                        politik, berdiri di atas kaki sendiri di bidang ekonomi,
+                        dan berkepribadian di bidang kebudayaan.
+                    </p>
+                    <p>
+                        Sepanjang sejarahnya, GMNI telah menjadi salah satu organisasi
+                        mahasiswa yang konsisten menyuarakan keadilan sosial,
+                        menentang imperialisme, dan berjuang bersama rakyat marhaen.
+                    </p>
+                    <div style="padding-top:12px">
+                        <a href="#visi-misi" class="link-arrow">
+                            Lihat Visi Misi
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                                <line x1="5" y1="12" x2="19" y2="12"/>
+                                <polyline points="12 5 19 12 12 19"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         VISI & MISI
+         ========================================== -->
+    <section class="section section--alt" id="visi-misi">
+        <div class="section__inner">
+            <!-- Header -->
+            <div class="section__head section__head--center reveal">
+                <span class="tag">Arah Perjuangan</span>
+                <h2>Visi & Misi</h2>
+            </div>
+
+            <!-- Grid 2 Kolom -->
+            <div class="vm-grid reveal" style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+                <!-- Visi -->
+                <div class="card card--lg">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                    </div>
+                    <h3>Visi</h3>
+                    <p>Terwujudnya sosilisme indonesia yang 
+                     berdasarkan pancasila 1 juni 1945 dan
+                     marhanisme, yaitu musyarakat yang adil dan
+                     makmur, berdaulat secara politik, dan berdikari 
+                     secara ekonomi, dan berkepribadaian dalam 
+                     kebudayaan 
+                     </p>
+                </div>
+
+                <!-- Misi -->
+                <div class="card card--lg">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <circle cx="12" cy="12" r="6"/>
+                            <circle cx="12" cy="12" r="2"/>
+                        </svg>
+                    </div>
+                    <h3>Misi</h3>
+                    <ul class="misi-list">
+                        <li><span class="misi-num">1</span><span>ideologi dan Perjuangan: Membumikan ideologi Marhaenisme sebagai pandangan hidup revolusioner dan berpihak pada kaum Marhaen (petani kecil, nelayan, buruh, rakyat tertindas).</li>
+                        <li><span class="misi-num">2</span><span>Kaderisasi Membentuk kader yang berintegritas, berjiwa nasionalis, berwawasan luas, serta memiliki kepedulian sosial tinggi.</span></li>
+                        <li><span class="misi-num">3</span><span>Karakter Pejuang-Pemikir: Mencetak kader yang mampu berjuang untuk rakyat dan memikirkan kelanjutan perjuangan tersebut, serta mengabdikan ilmunya secara intelektual.</span></li>
+                        <li><span class="misi-num">4</span><span>Gerakan Sosial: Terlibat aktif dalam pembangunan nasional, mengawal kebijakan publik yang pro-rakyat, serta melawan ketidakadilan (pro-kebijakan daerah/nasional yang berpihak pada rakyat kecil).</span></li>
+                        <li><span class="misi-num">5</span><span>Persatuan Bangsa: Memperkuat persatuan dan kesatuan nasional yang inklusif</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         TIGA PILAR TRISAKTI
+         ========================================== -->
+    <section class="section">
+        <div class="section__inner">
+            <div class="section__head section__head--center reveal">
+                <span class="tag">Landasan Perjuangan</span>
+                <h2>Tiga Pilar <span class="dim">Trisakti</span></h2>
+            </div>
+
+            <div class="pillars-grid reveal">
+                <!-- Pilar 1: Politik -->
+                <div class="pillar">
+                    <img src="trisakti politik.jpg.jpeg" alt="Politik">
+                    <div class="pillar-bg"></div>
+                    <div class="pillar-body">
+                        <span class="pillar-tag">Pilar Pertama</span>
+                        <h3 class="pillar-title">Berdaulat di Bidang Politik</h3>
+                        <p class="pillar-desc">Negara memegang kedaulatan penuh dalam menentukan arah politik nasional, bebas dari campur tangan asing.</p>
+                    </div>
+                </div>
+
+                <!-- Pilar 2: Ekonomi -->
+                <div class="pillar">
+                    <img src="sampah2.jpeg" alt="Ekonomi">
+                    <div class="pillar-bg"></div>
+                    <div class="pillar-body">
+                        <span class="pillar-tag">Pilar Kedua</span>
+                        <h3 class="pillar-title">Berdiri di Atas Kaki Sendiri</h3>
+                        <p class="pillar-desc">Membangun perekonomian nasional yang mandiri, berdikari, dan berkeadilan sosial bagi kemakmuran rakyat.</p>
+                    </div>
+                </div>
+
+                <!-- Pilar 3: Budaya -->
+                <div class="pillar">
+                    <img src="poto di branda.jpeg" alt="Budaya">
+                    <div class="pillar-bg"></div>
+                    <div class="pillar-body">
+                        <span class="pillar-tag">Pilar Ketiga</span>
+                        <h3 class="pillar-title">Berkepribadian di Bidang Kebudayaan</h3>
+                        <p class="pillar-desc">Memiliki jati diri budaya bangsa yang kokoh, menolak budaya asing yang bertentangan dengan nilai Pancasila.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         PROGRAM KERJA
+         ========================================== -->
+    <section class="section section--alt" id="program">
+        <div class="section__inner">
+            <!-- Header dengan baris -->
+            <div class="section__row reveal">
+                <div>
+                    <span class="tag">Kegiatan Kami</span>
+                    <h2>Program <span class="dim">Kerja</span></h2>
+                </div>
+                <p class="desc">Beragam program yang dirancang untuk membangun kader, mengadvokasi rakyat, dan memperkuat gerakan.</p>
+            </div>
+
+            <!-- Grid 3 Kolom -->
+            <div class="program-grid reveal" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+                <div class="card card--sm">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                    </div>
+                    <h3>Sekolah Kader Marhaen</h3>
+                    <p>Pendidikan kaderisasi berjenjang untuk membangun pemahaman ideologis Marhaenisme dan kebangsaan bagi anggota baru.</p>
+                </div>
+
+                <div class="card card--sm">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    </div>
+                    <h3>Aksi Massa & Advokasi</h3>
+                    <p>Mengorganisir aksi unjuk rasa, advokasi kebijakan, dan lobby legislatif untuk kepentingan rakyat marhaen.</p>
+                </div>
+
+                <div class="card card--sm">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                    </div>
+                    <h3>Bakti Sosial Rakyat</h3>
+                    <p>Kegiatan pengabdian langsung kepada masyarakat seperti baksos, pengobatan gratis, dan pendampingan desa.</p>
+                </div>
+
+                <div class="card card--sm">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+                    </div>
+                    <h3>Diskusi Publik & Seminar</h3>
+                    <p>Ruang dialog kritis membahas isu-isu aktual politik, ekonomi, sosial, dan budaya bersama narasumber kompeten.</p>
+                </div>
+
+                <div class="card card--sm">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                    </div>
+                    <h3>Solidaritas Internasional</h3>
+                    <p>Membangun jaringan solidaritas dengan gerakan mahasiswa dan rakyat di seluruh dunia menentang imperialisme.</p>
+                </div>
+
+                <div class="card card--sm">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></svg>
+                    </div>
+                    <h3>Media & Publikasi</h3>
+                    <p>Mengelola media sosial, buletin, podcast, dan jurnal untuk menyebarkan pemikiran Marhaenisme ke publik.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         BERITA & KEGIATAN
+         ========================================== -->
+    <section class="section" id="berita">
+        <div class="section__inner">
+            <div class="section__row reveal">
+                <div>
+                    <span class="tag">Terbaru</span>
+                    <h2>Berita & <span class="dim">Kegiatan</span></h2>
+                </div>
+                <a href="#" class="link-arrow">
+                    Semua Berita
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </a>
+            </div>
+
+            <div class="berita-grid reveal">
+                <!-- Berita 1 -->
+                <article class="berita-card">
+                    <div class="img">
+                        <img src="sampah2.jpeg" alt="Kongres">
+                        <div class="img-overlay"></div>
+                        <span class="cat">AKSI PEDULI LINGKUNGAN</span>
+                    </div>
+                    <div class="berita-meta">
+                        <span>12 April 2026</span><span class="dot"></span><span>Alun-Alun Lamandau</span>
+                    </div>
+                    <h3>GMNI LAMANADU Bersama seluruh OKP Lamandau Peduli Lingkungan</h3>
+                    <p class="excerpt">Hari ini kita bergerak, esok lingkungan kita berbicara. Jangan tunggu rusak untuk peduli. Mari jadi generasi yang bukan hanya menikmati, tapi juga menjaga.</p>
+                </article>
+
+                <!-- Berita 2 -->
+                <article class="berita-card">
+                    <div class="img">
+                        <img src="poto di branda.jpeg" alt="Aksi">
+                        <div class="img-overlay"></div>
+                        <span class="cat">Aksi</span>
+                    </div>
+                    <div class="berita-meta">
+                        <span>28 Nov 2026</span><span class="dot"></span><span>DPR RI</span>
+                    </div>
+                    <h3>GMNI Bersama Aliansi Buruh Desak Revisi UU Cipta Kerja</h3>
+                    <p class="excerpt">Ratusan kader GMNI turun ke jalan bersama elemen buruh menuntut pencabutan UU yang dinilai pro-kapital.</p>
+                </article>
+
+                <!-- Berita 3 -->
+                <article class="berita-card">
+                    <div class="img">
+                        <img src="poto di branda.jpeg" alt="Baksos">
+                        <div class="img-overlay"></div>
+                        <span class="cat">Sosial</span>
+                    </div>
+                    <div class="berita-meta">
+                        <span>10 Nov 2024</span><span class="dot"></span><span>Garut</span>
+                    </div>
+                    <h3>Kader GMNI Jalankan Bakti Sosial di Daerah Terdampak Bencana</h3>
+                    <p class="excerpt">Tim relawan GMNI menyalurkan bantuan logistik dan pendampingan psikososial bagi korban bencana alam di Jawa Barat.</p>
+                </article>
+
+                <!--berita 4-->
+                <article class="berita-card">
+                    <div class="img">
+                        <img src="poto di branda.jpeg" alt="Baksos">
+                        <div class="img-overlay"></div>
+                        <span class="cat">gak</span>
+                    <div class="berita-meta"></div>
+                    <span>1 januari 2026</span><span class="dot"></span><span>Lamandau</span>
+                    </div>
+                    <h3>aksi malam tahun baru</h3>
+                    <p class="excerpt">ada kericuhan yang terjadi di belakang pdam lamandau.</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         GALERI KEGIATAN
+         ========================================== -->
+    <section class="section section--alt" id="galeri">
+        <div class="section__inner">
+            <div class="section__head section__head--center reveal">
+                <span class="tag">Dokumentasi</span>
+                <h2>Galeri <span class="dim">Kegiatan</span></h2>
+            </div>
+
+            <div class="galeri-grid reveal">
+                <div class="galeri-item col-2 row-2">
+                    <img src="poto di branda.jpeg" alt=""><div class="gal-bg"></div>
+                </div>
+                <div class="galeri-item">
+                    <img src="poto di branda.jpeg" alt=""><div class="gal-bg"></div>
+                </div>
+                <div class="galeri-item">
+                    <img src="poto di branda.jpeg" alt=""><div class="gal-bg"></div>
+                </div>
+                <div class="galeri-item">
+                    <img src="poto di branda.jpeg" alt=""><div class="gal-bg"></div>
+                </div>
+                <div class="galeri-item">
+                    <img src="poto di branda.jpeg" alt=""><div class="gal-bg"></div>
+                </div>
+                <div class="galeri-item col-2">
+                    <img src="poto di branda.jpeg" alt=""><div class="gal-bg"></div>
+                </div>
+                <div class="galeri-item col-2">
+                    <img src="poto di branda.jpeg" alt=""><div class="gal-bg"></div>
+                </div>
+                <div class="galeri-item">
+                    <img src="logogmni.jpg.jpeg" alt="logo"><div
+                    class="gal-bg"></div>  
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         KUTIPAN BUNG KARNO
+         ========================================== -->
+    <section class="quote">
+        <div class="quote__inner reveal">
+            <div class="quote__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                    <path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/>
+                    <path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/>
+                </svg>
+            </div>
+            <blockquote class="quote__text">
+                "Marhaen ialah rakyat kecil yang berjuang.
+                <span class="hl">Marpok na gabe</span> — kalau tidak berjuang,
+                tidak akan menjadi apa-apa."
+            </blockquote>
+            <div class="quote__author">
+                <div class="name">Ir. Soekarno</div>
+                <div class="role">Proklamator Kemerdekaan & Bapak Marhaenisme</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         PENGURUS PUSAT
+         ========================================== -->
+    <section class="section section--alt">
+        <div class="section__inner">
+            <div class="section__head section__head--center reveal">
+                <span class="tag">Kepengurusan</span>
+                <h2>Pengurus <span class="dim">Pusat</span></h2>
+            </div>
+
+            <div class="pengurus-grid reveal">
+                <div class="pengurus-card">
+                    <div class="pengurus-avatar"><img src="poto_debyy.jpeg" alt="poto ketua"></div>
+                    <div class="jabatan">Ketua Umum</div>
+                    <div class="nama">Debby Pramana Putra </div>
+                    <div class="univ">Politeknik Lamandau</div>
+                </div>
+                <div class="pengurus-card">
+                    <div class="pengurus-avatar"><img src="poto di branda.jpeg" alt="poto sekretaris"></div>
+                    <div class="jabatan">Sekretaris</div>
+                    <div class="nama">Ikhsan Reza Pahlevi</div>
+                    <div class="univ">Universitas Terbuka</div>
+                </div>
+                <div class="pengurus-card">
+                    <div class="pengurus-avatar"><img src="poto di branda.jpeg" alt=""></div>
+                    <div class="jabatan">Bendahara Umum</div>
+                    <div class="nama">Donatalia Desi Hadu</div>
+                    <div class="univ">Politeknik Lamandau</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         CTA: FORM BERGABUNG
+         ========================================== -->
+    <section class="section" id="bergabung">
+        <div class="cta-box reveal">
+            <span class="tag">Bergabunglah</span>
+            <h2>Jadilah Bagian dari<br><span class="red">Perjuangan Rakyat</span></h2>
+            <p class="desc">GMNI membuka pintu bagi seluruh mahasiswa Indonesia yang memiliki semangat kebangsaan dan keadilan sosial.</p>
+
+            <form class="form-join" id="joinForm">
+                <input type="text"     placeholder="Nama Lengkap" required>
+                <input type="email"    placeholder="Alamat Email" required>
+                <input type="text"     placeholder="Universitas" required>
+                <select required>
+                    <option value="" disabled selected>Pilih Program Studi</option>
+                    <option>Teknologi Rekayasa Komputer (TRK)</option>
+                    <option>Teknologi Produksi Tanaman Perkebunan (TPTP)</option>
+                    <option>Teknologi Produksi Ternak (TPT)</option>
+                    </option>
+                </select>
+                <button type="submit" class="btn-submit">Berjuang Sekarang</button>
+            </form>
+            <div class="form-msg" id="formMsg"></div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         KONTAK
+         ========================================== -->
+    <section class="section section--alt" id="kontak">
+        <div class="section__inner">
+            <div class="kontak-grid reveal">
+                <!-- Info Kontak -->
+                <div>
+                    <span class="tag">Hubungi Kami</span>
+                    <h2 style="font-size:clamp(28px,3.5vw,44px);font-weight:700;letter-spacing:-1px;margin:12px 0 32px">
+                        DPC GMNI LAMANADU </span>
+                    </h2>
+
+                    <div class="kontak-item">
+                        <div class="kontak-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                        </div>
+                        <div>
+                            <div class="label">Alamat</div>
+                            <div class="value">Jl. MAWAR RT 02. <br> Cabang, KAB.Lamandau</div>
+                        </div>
+                    </div>
+
+                    <div class="kontak-item">
+                        <div class="kontak-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                        </div>
+                        <div>
+                            <div class="label">Telepon</div>
+                            <div class="value">085828455090</div>
+                            <div class="value">08534859003</div>
+                        </div>
+                    </div>
+
+                    <div class="kontak-item">
+                        <div class="kontak-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                        </div>
+                        <div>
+                            <div class="label">Gmail</div>
+                            <div class="value">gmnidpclamandau@gmail.com</div>
+                        </div>
+                    </div>
+
+                    <!-- Sosial Media -->
+                    <div class="socials">
+                        <a href="#" aria-label="Instagram">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                        </a>
+                        <a href="#" aria-label="Twitter">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg>
+                        </a>
+                        <a href="#" aria-label="Facebook">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+                        </a>
+                        <a href="#" aria-label="YouTube">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19.1c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.43z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Peta Placeholder -->
+                <div class="kontak-map">
+                    <img src="poto di branda.jpeg" alt="Lokasi">
+                    <div class="map-pin">
+                        <div>
+                            <div class="map-dot">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            </div>
+                            <div class="map-label">SEKRE GMNI LMD</div>
+                            <div class="map-addr">Jl.MASKAYA PANGARUH NO.2 LAMANDAU</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         FOOTER
+         ========================================== -->
+    <footer class="footer">
+        <div class="footer__inner">
+            <div class="footer__grid">
+                <!-- Brand -->
+                <div>
+                    <div class="footer__brand">
+                        <img src="https://z-cdn-media.chatglm.cn/files/5c6cb53f-2abf-41bc-8aa1-5789360da73a.jpg?auth_key=1874869074-4709b9220c2e4451b3993ca4cc86859f-0-13e4aab88d8abcffc71efdc5f07ebac2" alt="Logo GMNI">
+                        <span>GMNI</span>
+                    </div>
+                    <p class="footer__desc">Pejuang pemikir — pemikir pejuang.</p>
+                </div>
+
+                <!-- Navigasi -->
+                <div class="footer__col">
+                    <h4>Navigasi</h4>
+                    <ul>
+                        <li><a href="#beranda">Beranda</a></li>
+                        <li><a href="#profil">Profil</a></li>
+                        <li><a href="#visi-misi">Visi Misi</a></li>
+                        <li><a href="#program">Program Kerja</a></li>
+                        <li><a href="#berita">Berita</a></li>
+                    </ul>
+                </div>
+
+                <!-- Organisasi -->
+                <div class="footer__col">
+                    <h4>Organisasi</h4>
+                    <ul>
+                        <li><a href="#">AD/ART</a></li>
+                        <li><a href="#">Garis Besar Haluan</a></li>
+                        <li><a href="#">Struktur Organisasi</a></li>
+                        <li><a href="#">Komisariat</a></li>
+                        <li><a href="#bergabung">Bergabung</a></li>
+                    </ul>
+                </div>
+
+                <!-- Kontak -->
+                <div class="footer__col">
+                    <h4>Kontak</h4>
+                    <p class="value">gmnidpclamandau@gmail.com</p>
+                    <p class="value">085828455090</p>
+                    <p class="value">08534859003</p>
+                    <p class="value">Jl. Maskaya Pangaruh No. 2<br>Lamandau</p>
+                </div>
+            </div>
+
+            <div class="footer__bottom">
+                <p>© 2026 GMNI — Gerakan Mahasiswa Nasional Indonesia.</p>
+                <p>Berlandaskan Marhaenisme · Pancasila · UUD 1945</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ==========================================
+         TOMBOL BACK TO TOP
+         ========================================== -->
+    <button class="back-top" id="backToTop" aria-label="Kembali ke atas">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <line x1="12" y1="19" x2="12" y2="5"/>
+            <polyline points="5 12 12 5 19 12"/>
+        </svg>
+    </button>
+
+    <!-- ==========================================
+         JAVASCRIPT
+         ========================================== -->
+    <script>
+        /* ------------------------------------------
+           1. REFERENSI ELEMEN DOM
+           Simpan semua elemen yang sering dipakai
+           agar tidak cari ulang setiap kali
+           ------------------------------------------ */
+        const $ = (sel) => document.querySelector(sel);
+        const $$ = (sel) => document.querySelectorAll(sel);
+
+        const navbar     = $('#navbar');
+        const mobileMenu = $('#mobileMenu');
+        const backToTop  = $('#backToTop');
+        const joinForm   = $('#joinForm');
+        const formMsg    = $('#formMsg');
+
+        /* ------------------------------------------
+           2. MOBILE MENU
+           Buka: klik hamburger → tampil fullscreen
+           Tutup: klik X / klik link / klik overlay
+           ------------------------------------------ */
+        $('#navToggle').addEventListener('click', () => {
+            mobileMenu.classList.add('active');
+            document.body.style.overflow = 'hidden';  // Cegah scroll
+        });
+
+        function closeMobile() {
+            mobileMenu.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        $('#mobileClose').addEventListener('click', closeMobile);
+        $$('.mob-link').forEach(link => link.addEventListener('click', closeMobile));
+
+        /* ------------------------------------------
+           3. NAVBAR SCROLL EFFECT
+           Jika scroll > 60px → tambah background blur
+           ------------------------------------------ */
+        window.addEventListener('scroll', () => {
+            navbar.classList.toggle('scrolled', window.scrollY > 60);
+        });
+
+        /* ------------------------------------------
+           4. BACK TO TOP BUTTON
+           Muncul saat scroll > 600px
+           ------------------------------------------ */
+        window.addEventListener('scroll', () => {
+            backToTop.classList.toggle('show', window.scrollY > 600);
+        });
+
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        /* ------------------------------------------
+           5. SCROLL REVEAL
+           Elemen dengan class "reveal" akan muncul
+           saat masuk viewport (pakai IntersectionObserver)
+           ------------------------------------------ */
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('show');
+                    revealObserver.unobserve(entry.target); // Hanya sekali
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+        $$('.reveal').forEach(el => revealObserver.observe(el));
+
+        /* ------------------------------------------
+           6. ACTIVE NAV LINK
+           Highlight link navbar sesuai section yang
+           sedang terlihat di viewport
+           ------------------------------------------ */
+        const navLinks   = $$('.nav-links a:not(.nav-cta)');
+        const sectionIds = ['beranda', 'profil', 'visi-misi', 'program', 'berita', 'galeri', 'kontak', 'bergabung'];
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+
+            sectionIds.forEach(id => {
+                const section = document.getElementById(id);
+                if (section && window.scrollY >= section.offsetTop - 120) {
+                    current = id;
+                }
+            });
+
+            navLinks.forEach(link => {
+                const isActive = link.getAttribute('href') === '#' + current;
+                link.classList.toggle('active', isActive);
+            });
+        });
+
+        /* ------------------------------------------
+           7. FORM PENDAFTARAN
+           Validasi → Loading → Sukses/Gagal
+           ------------------------------------------ */
+        joinForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            // Ambil semua input & select
+            const fields  = joinForm.querySelectorAll('input, select');
+            const btn     = joinForm.querySelector('.btn-submit');
+            let isValid   = true;
+
+            // Validasi: semua field harus terisi
+            fields.forEach(field => {
+                if (!field.value || (field.tagName === 'SELECT' && field.value === '')) {
+                    isValid = false;
+                }
+            });
+
+            if (!isValid) {
+                formMsg.textContent = '✗ Mohon lengkapi semua field.';
+                formMsg.className   = 'form-msg show err';
+                return;
+            }
+
+            // Simulasi loading
+            btn.textContent = 'Memproses...';
+            btn.disabled    = true;
+
+            setTimeout(() => {
+                // Sukses
+                formMsg.textContent = '✓ Pendaftaran berhasil! Tim kami akan menghubungi Anda.';
+                formMsg.className   = 'form-msg show ok';
+                joinForm.reset();
+                btn.textContent = 'Daftar Sekarang';
+                btn.disabled    = false;
+
+                // Hilangkan pesan setelah 5 detik
+                setTimeout(() => {
+                    formMsg.className = 'form-msg';
+                }, 5000);
+            }, 1200);
+        });
+    </script>
+</body>
+</html>
